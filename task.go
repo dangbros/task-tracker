@@ -75,7 +75,7 @@ func addTask(title string) {
 
 }
 
-func listTasks() {
+func listTasks(choice string) {
 	tasks := loadTasks()
 
 	if len(tasks) == 0 {
@@ -83,8 +83,26 @@ func listTasks() {
 		return
 	}
 
-	for _, task := range tasks {
-		fmt.Printf("[%v] %v - %v\n", task.ID, task.Title, task.Status)
+	found := false
+	if choice != "" {
+		switch choice {
+		case "pending", "in-progress", "done":
+			for _, task := range tasks {
+				if task.Status == choice {
+					fmt.Printf("[%v] %v - %v\n", task.ID, task.Title, task.Status)
+					found = true
+				}
+			}
+			if !found {
+				fmt.Println("No task found for this status")
+			}
+		default:
+			fmt.Println("Invalid choice!")
+		}
+	} else {
+		for _, task := range tasks {
+			fmt.Printf("[%v] %v - %v\n", task.ID, task.Title, task.Status)
+		}
 	}
 }
 
@@ -103,4 +121,30 @@ func updateTaskStatus(givenID int, newStatus string) {
 		}
 	}
 	fmt.Println("Task is not found")
+}
+
+func deleteTask(givenID int) {
+	tasks := loadTasks()
+	var updatedTask []Task
+	found := false
+	for _, task := range tasks {
+		if task.ID != givenID {
+			updatedTask = append(updatedTask, task)
+		} else {
+			found = true
+		}
+	}
+
+	for i := range updatedTask {
+		updatedTask[i].ID = i + 1
+	}
+	if found {
+		for i := range updatedTask {
+			updatedTask[i].ID = i + 1
+		}
+		saveTask(updatedTask)
+		fmt.Println("Task deleted successfully")
+	} else {
+		fmt.Println("Task not found")
+	}
 }

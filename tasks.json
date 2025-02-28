@@ -1,7 +1,22 @@
 [
  {
   "id": 1,
-  "title": "go buy groceries",
+  "title": "Finish Go project",
   "status": "done"
+ },
+ {
+  "id": 2,
+  "title": "Read a book",
+  "status": "in-progress"
+ },
+ {
+  "id": 3,
+  "title": "Workout",
+  "status": "done"
+ },
+ {
+  "id": 4,
+  "title": "Prepare presentation",
+  "status": "in-progress"
  }
 ]
