@@ -215,3 +215,21 @@ func clearAllTask() {
 	saveTask(Tasks)
 	fmt.Println(green + "✅All task cleared!" + reset)
 }
+
+func ShowHelp() {
+	fmt.Println(yellow + "📖 Task Manager CLI - Help Menu" + reset)
+	fmt.Println(green + "\nUsage:" + reset)
+	fmt.Println("  task-cli add <task_title>        → Add a new task")
+	fmt.Println("  task-cli list                   → List all tasks")
+	fmt.Println("  task-cli list <status>          → List tasks by status (pending, done, in-progress)")
+	fmt.Println("  task-cli update <id> <status>   → Update task status (pending, done, in-progress)")
+	fmt.Println("  task-cli edit <id> <new_title>  → Edit a task title")
+	fmt.Println("  task-cli delete <id>            → Delete a task")
+	fmt.Println("  task-cli clear                  → Clear all tasks")
+	fmt.Println("  task-cli help                   → Show this help menu")
+	fmt.Println(green + "\nExamples:" + reset)
+	fmt.Println("  task-cli add Buy groceries")
+	fmt.Println("  task-cli update 2 done")
+	fmt.Println("  task-cli list pending")
+	fmt.Println("  task-cli edit 3 Read a book")
+}

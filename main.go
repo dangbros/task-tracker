@@ -74,6 +74,8 @@ func main() {
 
 	case "clear":
 		clearAllTask()
+	case "help":
+		ShowHelp()
 
 	default:
 		fmt.Println(red+"❌Error: Unknown command:"+reset, command)
