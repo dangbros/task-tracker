@@ -209,3 +209,9 @@ func editTaskTitle(TaskId int, newtitle string) {
 	}
 	fmt.Println(red + "❌Error: TaskId not found" + reset)
 }
+
+func clearAllTask() {
+	var Tasks []Task
+	saveTask(Tasks)
+	fmt.Println(green + "✅All task cleared!" + reset)
+}

@@ -72,6 +72,9 @@ func main() {
 		newtitle := strings.Join(os.Args[3:], " ")
 		editTaskTitle(taskID, newtitle)
 
+	case "clear":
+		clearAllTask()
+
 	default:
 		fmt.Println(red+"❌Error: Unknown command:"+reset, command)
 	}
