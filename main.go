@@ -11,16 +11,16 @@ func getTaskID() int {
 	taskID := os.Args[2]
 	numID, err := strconv.Atoi(taskID)
 	if err != nil {
-		fmt.Println("Error while converting task id into num: ", err)
+		fmt.Println(red+"❌Error: Task ID must be a number."+reset, err)
 		os.Exit(1)
 	}
 	return numID
 }
 
 func main() {
-	fmt.Println("Welcome! This is Task Manager CLI")
+	fmt.Println(green + "Welcome! This is Task Manager CLI" + reset)
 	if len(os.Args) < 2 {
-		fmt.Println("Usuage: go run main.go <command> [arguments]")
+		fmt.Println(yellow + "Usuage: go run main.go <command> [arguments]" + reset)
 		return
 	}
 
@@ -28,15 +28,15 @@ func main() {
 	switch command {
 	case "add":
 		if len(os.Args) < 3 {
-			fmt.Println("Usage: go run main.go add <task>")
+			fmt.Println(yellow + "Usage: go run main.go add <task>" + reset)
 			return
 		}
 		task := strings.Join(os.Args[2:], " ")
-		fmt.Println("Adding task:", task)
+		fmt.Println(yellow+"Adding task:"+reset, task)
 		addTask(task)
 
 	case "list":
-		fmt.Println("Listing all tasks...")
+		fmt.Println(yellow + "Listing all tasks..." + reset)
 		option := ""
 		if len(os.Args) > 2 {
 			option = os.Args[2]
@@ -46,22 +46,33 @@ func main() {
 
 	case "delete":
 		if len(os.Args) < 3 {
-			fmt.Println("Usage: go run main.go delete <task_id>")
+			fmt.Println(red + "❌Error: Missing Task ID." + reset)
+			fmt.Println(yellow + "Usage: go run main.go delete <task_id>" + reset)
 			return
 		}
 		taskID := getTaskID()
-		fmt.Println("Deleting task with ID:", taskID)
+		fmt.Println(yellow+"Deleting task with ID:"+reset, taskID)
 		deleteTask(taskID)
 	case "update":
 		if len(os.Args) < 3 {
-			fmt.Println("Usage: go run main.go update <task_id> <status-changed>")
+			fmt.Println(yellow + "Usage: go run main.go update <task_id> <status-changed>" + reset)
 			return
 		}
 		newStatus := os.Args[3]
 		TaskID := getTaskID()
 		updateTaskStatus(TaskID, newStatus)
 
+	case "edit":
+		if len(os.Args) < 4 {
+			fmt.Println(yellow + "Usage: go run main.go edit <task_id> <new title>" + reset)
+			return
+		}
+
+		taskID := getTaskID()
+		newtitle := strings.Join(os.Args[3:], " ")
+		editTaskTitle(taskID, newtitle)
+
 	default:
-		fmt.Println("Unknown command:", command)
+		fmt.Println(red+"❌Error: Unknown command:"+reset, command)
 	}
 }

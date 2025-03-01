@@ -4,6 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
+)
+
+const (
+	reset  = "\033[0m"
+	red    = "\033[31m"
+	green  = "\033[32m"
+	yellow = "\033[33m"
 )
 
 const taskFile = "tasks.json"
@@ -19,11 +27,11 @@ func loadTasks() []Task {
 	file, err := os.ReadFile(taskFile)
 	if err != nil {
 		if os.IsNotExist(err) {
-			fmt.Println("File does not exist")
+			fmt.Println(yellow + "File does not exist" + reset)
 			return []Task{}
 		}
-		fmt.Println("Error reading file: ", err)
-		os.Exit(1)
+		fmt.Println(red+"❌Error: reading file unsuccessful: "+reset, err)
+		return []Task{}
 	}
 
 	if len(file) == 0 {
@@ -33,8 +41,8 @@ func loadTasks() []Task {
 	var tasks []Task
 	err = json.Unmarshal(file, &tasks)
 	if err != nil {
-		fmt.Println("Error reading file: ", err)
-		os.Exit(1)
+		fmt.Println(red+"❌Error: Corrupted task.json. Creating a new file."+reset, err)
+		return []Task{}
 	}
 
 	return tasks
@@ -43,16 +51,20 @@ func loadTasks() []Task {
 func saveTask(tasks []Task) {
 	newData, err := json.MarshalIndent(tasks, "", " ")
 	if err != nil {
-		fmt.Println("Error encoding JSON: ", err)
+		fmt.Println(red+"❌Error: encoding JSON unsuccessful: "+reset, err)
 		return
 	}
 	err = os.WriteFile(taskFile, newData, 0644)
 	if err != nil {
-		fmt.Print("Error wrting to file: ", err)
+		fmt.Println(red+"❌Error: wrting to file unsuccessful: "+reset, err)
 	}
 }
 
 func addTask(title string) {
+	if strings.TrimSpace(title) == "" {
+		fmt.Println(red + "❌Error: Title of the task cannot be empty!" + reset)
+		return
+	}
 	tasks := loadTasks()
 	var newID int
 
@@ -71,7 +83,7 @@ func addTask(title string) {
 	tasks = append(tasks, newtask)
 	saveTask(tasks)
 
-	fmt.Printf("'%v' is added in the list. \n", title)
+	fmt.Printf(green+"'✅%v' is added in the list. \n"+reset, title)
 
 }
 
@@ -79,7 +91,7 @@ func listTasks(choice string) {
 	tasks := loadTasks()
 
 	if len(tasks) == 0 {
-		fmt.Println("List of Tasks is empty")
+		fmt.Println(red + "List of Tasks is empty" + reset)
 		return
 	}
 
@@ -89,38 +101,74 @@ func listTasks(choice string) {
 		case "pending", "in-progress", "done":
 			for _, task := range tasks {
 				if task.Status == choice {
-					fmt.Printf("[%v] %v - %v\n", task.ID, task.Title, task.Status)
+					color := reset
+					switch task.Status {
+					case "pending":
+						color = yellow
+					case "in-progress":
+						color = red
+					case "done":
+						color = green
+					}
+					fmt.Printf("%s[%v] %v - %v\n"+reset, color, task.ID, task.Title, task.Status)
 					found = true
 				}
 			}
+
 			if !found {
-				fmt.Println("No task found for this status")
+				fmt.Println(red + "No task found for this status" + reset)
 			}
 		default:
-			fmt.Println("Invalid choice!")
+			fmt.Println(red + "Invalid choice!" + reset)
 		}
+
 	} else {
 		for _, task := range tasks {
-			fmt.Printf("[%v] %v - %v\n", task.ID, task.Title, task.Status)
+			color := reset
+			switch task.Status {
+			case "pending":
+				color = yellow
+			case "in-progress":
+				color = red
+			case "done":
+				color = green
+			}
+			fmt.Printf("%s[%v] %v - %v\n"+reset, color, task.ID, task.Title, task.Status)
 		}
 	}
 }
 
 func updateTaskStatus(givenID int, newStatus string) {
+	validStatuses := map[string]bool{
+		"pending":     true,
+		"in-progress": true,
+		"done":        true,
+	}
+
+	if !validStatuses[newStatus] {
+		fmt.Println(red + "❌Error: Invalid Status. Use 'pending', 'in-progress' or 'done'." + reset)
+		return
+	}
+
 	tasks := loadTasks()
+	found := false
 	if len(tasks) == 0 {
-		fmt.Println("List of Tasks is empty")
+		fmt.Println(yellow + "List of Tasks is empty" + reset)
 		return
 	}
 	for i, task := range tasks {
 		if task.ID == givenID {
 			tasks[i].Status = newStatus
 			saveTask(tasks)
-			fmt.Println("Task updated successfully")
-			return
+			fmt.Println(green + "✅Task updated successfully" + reset)
+			found = true
+			break
 		}
 	}
-	fmt.Println("Task is not found")
+
+	if !found {
+		fmt.Println(red + "❌Error: Task is not found." + reset)
+	}
 }
 
 func deleteTask(givenID int) {
@@ -143,8 +191,21 @@ func deleteTask(givenID int) {
 			updatedTask[i].ID = i + 1
 		}
 		saveTask(updatedTask)
-		fmt.Println("Task deleted successfully")
+		fmt.Println(green + "✅Task deleted successfully" + reset)
 	} else {
-		fmt.Println("Task not found")
+		fmt.Println(red + "❌Error: Task not found" + reset)
 	}
+}
+
+func editTaskTitle(TaskId int, newtitle string) {
+	Tasks := loadTasks()
+	for i, task := range Tasks {
+		if task.ID == TaskId {
+			Tasks[i].Title = newtitle
+			saveTask(Tasks)
+			fmt.Println(green + "✅Task title edited successfully" + reset)
+			return
+		}
+	}
+	fmt.Println(red + "❌Error: TaskId not found" + reset)
 }
