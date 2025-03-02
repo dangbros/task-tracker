@@ -39,4 +39,4 @@ A feature-rich command-line task manager with persistent storage and color-coded
 
 #### Using Go Install
 ```bash
-go install github.com/yourusername/task-cli@latest
+go install github.com/dangbros/task-tracker@latest
