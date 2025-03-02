@@ -51,4 +51,4 @@ This implementation follows the recommended development path from [roadmap.sh's 
 
 #### Using Go Install
 ```bash
-go install github.com/yourusername/task-cli@latest
+go install github.com/dangbros/task-tracker@latest
