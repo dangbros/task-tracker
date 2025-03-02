@@ -6,6 +6,8 @@
 
 A feature-rich command-line task manager with persistent storage and color-coded interface. Manage your tasks efficiently with this intuitive Go-based CLI tool. This project follows the [Task Tracker Project Roadmap](https://roadmap.sh/projects/task-tracker) from roadmap.sh.
 
+![CLI Demo](demo.gif) <!-- Add actual demo gif later -->
+
 ## Table of Contents
 - [Project Roadmap](#project-roadmap-)
 - [Features](#features-)
@@ -24,6 +26,29 @@ This implementation follows the recommended development path from [roadmap.sh's 
 - Architecture decisions
 - Implementation priorities
 - Best practice adoption
+- Error handling strategies
+- Persistence layer design
 
 ## Features ✨
-[... rest of the README remains unchanged ...]
+
+- **CRUD Operations**: Full Create, Read, Update, Delete functionality
+- **Status Tracking**: Three states - `pending`, `in-progress`, and `done`
+- **Colorful UI**: Visual status indicators with ANSI colors
+- **Persistent Storage**: Automatic saving to JSON file
+- **Filtering**: List tasks by specific status
+- **Bulk Operations**: Clear all tasks with one command
+- **Help System**: Built-in documentation with examples
+- **Error Handling**: Friendly error messages with troubleshooting tips
+- **ID Management**: Automatic ID generation and maintenance
+
+## Installation ⚙️
+
+### Prerequisites
+- Go 1.21 or newer
+- Git (for source installation)
+
+### Methods
+
+#### Using Go Install
+```bash
+go install github.com/yourusername/task-cli@latest
